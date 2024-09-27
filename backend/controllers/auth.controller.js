@@ -8,18 +8,24 @@ export const register = async (req, res) => {
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
-      return res.status(400).json({ error: "Invalid email format" });
+      return res
+        .status(400)
+        .json({ success: false, message: "Invalid email format", data: false });
     }
 
     const existingEmail = await User.findOne({ email });
     if (existingEmail) {
-      return res.status(400).json({ error: "Email is already taken" });
+      return res
+        .status(400)
+        .json({ success: false, message: "Email already taken", data: false });
     }
 
     if (password.length < 6) {
-      return res
-        .status(400)
-        .json({ error: "Password must be at least 6 characters long" });
+      return res.status(400).json({
+        success: false,
+        message: "Password must be at least 6 characters long",
+        data: false,
+      });
     }
 
     const salt = await bcrypt.genSalt(10);
@@ -36,16 +42,24 @@ export const register = async (req, res) => {
       await newUser.save();
 
       res.status(201).json({
-        _id: newUser._id,
-        fullName: newUser.fullName,
-        email: newUser.email,
+        success: true,
+        message: "Registeration Successful",
+        data: {
+          _id: newUser._id,
+          fullName: newUser.fullName,
+          email: newUser.email,
+        },
       });
     } else {
-      res.status(400).json({ error: "Invalid user data" });
+      res
+        .status(400)
+        .json({ success: false, message: "Invalid user data", data: false });
     }
   } catch (error) {
     console.log("Error in signup controller", error.message);
-    res.status(500).json({ error: "Internal Server Error" });
+    res
+      .status(500)
+      .json({ success: false, message: "Internal Server Error", data: false });
   }
 };
 
@@ -59,29 +73,43 @@ export const login = async (req, res) => {
     );
 
     if (!user || !isPasswordCorrect) {
-      return res.status(400).json({ error: "Invalid username or password" });
+      return res.status(400).json({
+        success: false,
+        data: false,
+        error: "Invalid username or password",
+      });
     }
 
     generateTokenAndSetCookie(user._id, res);
 
     res.status(200).json({
-      _id: user._id,
-      fullName: user.fullName,
-      email: user.email,
+      success: true,
+      message: "Login Successfull",
+      data: {
+        _id: user._id,
+        fullName: user.fullName,
+        email: user.email,
+      },
     });
   } catch (error) {
     console.log("Error in login controller", error.message);
-    res.status(500).json({ error: "Internal Server Error" });
+    res
+      .status(500)
+      .json({ success: false, message: "Internal Server Error", data: false });
   }
 };
 
 export const logout = async (req, res) => {
   try {
     res.cookie("jwt", "", { maxAge: 0 });
-    res.status(200).json({ message: "Logged out successfully" });
+    res
+      .status(200)
+      .json({ success: true, message: "Logged out successfully", data: true });
   } catch (error) {
     console.log("Error in logout controller", error.message);
-    res.status(500).json({ error: "Internal Server Error" });
+    res
+      .status(500)
+      .json({ success: false, message: "Internal Server Error", data: false });
   }
 };
 

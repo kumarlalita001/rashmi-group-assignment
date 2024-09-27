@@ -4,32 +4,42 @@ import { v4 as uuidv4 } from "uuid";
 export const getAllTasks = async (req, res) => {
   try {
     const tasks = await Task.find({ user_id: req.user._id });
-    return res.status(200).json(tasks);
+    return res
+      .status(200)
+      .json({ success: true, message: "Successfull Fetched", data: tasks });
   } catch (error) {
-    res.status(500).json({ error: "Error fetching tasks" });
+    res.status(500).json({
+      success: false,
+      message: "Data Fetching Issue Poor Internet",
+      data: false,
+    });
   }
 };
 
 export const createTask = async (req, res) => {
   const { title, description, status, due_date, priority } = req.body;
 
-  console.log(req.body);
-
   try {
     const newTask = new Task({
-      task_id: uuidv4(), // Generate unique task ID
+      task_id: uuidv4(),
       title,
       description,
       status,
       due_date,
       priority,
-      user_id: req.user._id, // Extract user ID from the authenticated user
+      user_id: req.user._id,
     });
 
     await newTask.save();
-    return res.status(201).json(newTask);
+    return res
+      .status(201)
+      .json({ success: true, message: "Successfull Fetched", data: newTask });
   } catch (error) {
-    res.status(500).json({ error: "Error creating task" });
+    res.status(500).json({
+      success: false,
+      message: "ERror in creating new task",
+      data: false,
+    });
   }
 };
 
@@ -39,10 +49,17 @@ export const getSpecificTask = async (req, res) => {
       task_id: req.params.task_id,
       user_id: req.user._id,
     });
-    if (!task) return res.status(404).json({ error: "Task not found" });
-    res.status(200).json(task);
+    if (!task)
+      return res
+        .status(404)
+        .json({ success: false, message: "Task Not found", data: false });
+    res
+      .status(200)
+      .json({ success: true, message: "Successfull Fetched One", data: task });
   } catch (error) {
-    res.status(500).json({ error: "Error fetching task" });
+    res
+      .status(500)
+      .json({ success: false, message: "Error in Fetching", data: false });
   }
 };
 
@@ -63,11 +80,18 @@ export const updateTask = async (req, res) => {
       { new: true }
     );
 
-    if (!task) return res.status(404).json({ error: "Task not found" });
+    if (!task)
+      return res
+        .status(404)
+        .json({ success: false, data: false, error: "Task not found" });
 
-    res.status(200).json(task);
+    res
+      .status(200)
+      .json({ success: true, message: "Successfull Fetched", data: task });
   } catch (error) {
-    res.status(500).json({ error: "Error updating task" });
+    res
+      .status(500)
+      .json({ success: false, message: "Error in Updating", data: false });
   }
 };
 
@@ -77,9 +101,16 @@ export const deleteTask = async (req, res) => {
       task_id: req.params.task_id,
       user_id: req.user._id,
     });
-    if (!task) return res.status(404).json({ error: "Task not found" });
-    res.status(200).json({ message: "Task deleted successfully" });
+    if (!task)
+      return res
+        .status(404)
+        .json({ success: false, message: "Task Not Found", data: false });
+    res
+      .status(200)
+      .json({ success: true, message: "Deleted Successfully", data: true });
   } catch (error) {
-    res.status(500).json({ error: "Error deleting task" });
+    res
+      .status(500)
+      .json({ success: false, message: "Error in Fetching", data: false });
   }
 };
