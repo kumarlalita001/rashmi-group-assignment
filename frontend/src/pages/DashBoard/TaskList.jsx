@@ -1,8 +1,9 @@
 import { Link } from "react-router-dom";
 
 export default function TaskList({ tasks }) {
+  console.log("tasks", tasks);
   return (
-    <div className="bg-white shadow overflow-hidden sm:rounded-md">
+    <div className="bg-white shadow  sm:rounded-md">
       <ul className="divide-y divide-gray-200">
         {tasks.map((task) => (
           <li key={task.id}>

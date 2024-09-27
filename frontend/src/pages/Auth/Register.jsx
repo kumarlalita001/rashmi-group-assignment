@@ -55,7 +55,7 @@ const Register = () => {
       alert("Success");
 
       // Redirect user or update UI
-      window.location.href = "/dashboard";
+      // window.location.href = "/dashboard";
     } catch (error) {
       console.error("Error during signup:", error);
     }
