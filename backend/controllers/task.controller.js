@@ -2,8 +2,10 @@ import { Task } from "../models/task.model.js";
 import { v4 as uuidv4 } from "uuid";
 
 export const getAllTasks = async (req, res) => {
+  console.log("req.user :", req.user);
   try {
     const tasks = await Task.find({ user_id: req.user._id });
+    console.log("REQ user ", req.user);
     return res
       .status(200)
       .json({ success: true, message: "Successfull Fetched", data: tasks });

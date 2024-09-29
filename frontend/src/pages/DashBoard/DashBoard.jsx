@@ -13,17 +13,23 @@ export default function Dashboard({ onLogout }) {
 
   const fetchTasks = async () => {
     const token = localStorage.getItem("token");
+    console.log(token);
+
     if (!token) {
+      console.log("No token found");
       alert("No token found in localStorage");
       return;
     }
 
     try {
       const response = await fetch("http://localhost:5001/api/tasks/alltasks", {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
+        // method: "GET",
+        // headers: {
+        //   Authorization: `Bearer ${token}`, // Add the token to Authorization header
+        //   "Content-Type": "application/json",
+        // },
       });
+
       if (response.ok) {
         const data = await response.json();
 

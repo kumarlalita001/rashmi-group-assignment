@@ -38,7 +38,7 @@ export const register = async (req, res) => {
     });
 
     if (newUser) {
-      generateTokenAndSetCookie(newUser._id, res);
+      const tokenMine = generateTokenAndSetCookie(newUser._id, res);
       await newUser.save();
 
       res.status(201).json({
@@ -48,6 +48,7 @@ export const register = async (req, res) => {
           _id: newUser._id,
           fullName: newUser.fullName,
           email: newUser.email,
+          token: tokenMine,
         },
       });
     } else {

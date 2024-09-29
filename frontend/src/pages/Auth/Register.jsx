@@ -1,4 +1,5 @@
 import React, { useRef, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 import { Bounce, ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -7,6 +8,7 @@ const Register = () => {
   const usernameRef = useRef();
   const emailRef = useRef();
   const passwordRef = useRef();
+  const navigate = useNavigate();
 
   const handleRegister = async (e) => {
     e.preventDefault();
@@ -39,6 +41,8 @@ const Register = () => {
         }),
       });
 
+      console.log("responsve", response);
+
       if (!response.ok) {
         // Handle error
         const errorData = await response.json();
@@ -50,9 +54,11 @@ const Register = () => {
 
       console.log("Register Data :", data);
       // Save JWT token to localStorage
-      localStorage.setItem("token", data.token);
-      console.log("Signup successful, token saved:", data.token);
+      localStorage.setItem("token", data.data.token);
+      console.log("Signup successful, token saved:", data.data.token);
       alert("Success");
+
+      navigate("/dashboard");
 
       // Redirect user or update UI
       // window.location.href = "/dashboard";
